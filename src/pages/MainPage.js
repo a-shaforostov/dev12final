@@ -17,7 +17,7 @@ class MainPage extends Component {
     return (
       <PageWithTransition page="root">
         Main Page
-        <a href="/login">login</a>
+        <a href="/second">Second page</a>
       </PageWithTransition>
     )
   }

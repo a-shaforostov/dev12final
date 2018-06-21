@@ -3,6 +3,17 @@
  */
 
 import { Provider } from "cerebral";
+import sha1 from 'js-sha1';
+
+/**
+ * Returns sha1 hash of string
+ * @type {Provider}
+ */
+export const hashProvider = Provider({
+  sha1(str) {
+    return sha1(str);
+  },
+});
 
 let ggg;
 

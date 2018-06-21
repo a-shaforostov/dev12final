@@ -27,6 +27,7 @@ export const openRoute = route => {
             set(state`currentPage`, null),
             wait(pageTransitionDelay),
             set(state`currentPage`, route),
+            // redirect(`/${route}`),
           ],
           false: [],
         },
@@ -59,7 +60,7 @@ export const authenticate = (continueSequence = []) => {
       true: [
         continueSequence
       ],
-      false: [redirect('/login')],
+      false: [redirect('/')],
     },
   ]
 };

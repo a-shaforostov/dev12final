@@ -10,10 +10,8 @@ import injectSheet from 'react-jss';
 import { pageTransitionDelay } from '../../app/constants';
 
 import MainPage from 'pages/MainPage';
-import AdminPage from 'pages/AdminPage';
-import LoginPage from 'pages/LoginPage';
-
-// import LoginForm from '../LoginForm';
+import SecondPage from 'pages/SecondPage';
+import LoginForm from '../LoginForm';
 
 const styles = {
   '@global body': {
@@ -60,9 +58,8 @@ class Application extends Component {
     return (
       <div className={classes.container}>
         <MainPage />
-        <AdminPage />
-        <LoginPage />
-        {/*<LoginForm open={visibleLogin} />*/}
+        <SecondPage />
+        <LoginForm open={visibleLogin} />
       </div>
     )
   }

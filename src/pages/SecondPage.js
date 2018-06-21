@@ -10,21 +10,14 @@ import PageWithTransition from 'components/PageWithTransition';
 import injectSheet from 'react-jss';
 
 const styles = {
-  page: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
 };
 
-class LoginPage extends Component {
+class SecondPage extends Component {
   render() {
-    const { classes } = this.props;
     return (
-      <PageWithTransition page="login">
-        Login Page
-        <a href="/">home</a>
-
+      <PageWithTransition page="second">
+        Second Page
+        <a href="/">Main page</a>
       </PageWithTransition>
     )
   }
@@ -32,6 +25,7 @@ class LoginPage extends Component {
 
 export default connect(
   {
+
   },
-  injectSheet(styles)(LoginPage),
+  injectSheet(styles)(SecondPage),
 );

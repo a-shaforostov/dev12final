@@ -4,14 +4,13 @@
  */
 
 import { Module } from "cerebral";
-import * as sequences from "../app/sequences";
+import * as sequences from "./sequences";
 import FormsProvider from '@cerebral/forms';
 import { state } from 'cerebral/tags';
 
-import { longPromise } from "../app/providers";
-import { authenticate } from '../app/factories';
-import router from '../app/router';
-// import publicModule from '../app/publicModule';
+import { hashProvider, longPromise } from "./providers";
+import { authenticate } from './factories';
+import router from './router';
 
 export default Module({
   state: {
@@ -35,50 +34,41 @@ export default Module({
           defaultValue: '',
         },
       },
-      // libraries: {
-      //   id: { value: '', defaultValue: '' },
-      //   name: { value: '', isRequired: true },
-      //   address: { value: '', isRequired: true },
-      //   lat: { value: '', validationRules: [/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,20}$/] },
-      //   lng: { value: '', validationRules: [/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,20}$/] },
-      //   isNew: { value: true, defaultValue: true },
-      // },
-      // published: {
-      //   id: { value: '', defaultValue: '', isRequired: true, validationRules: ['existance:published']},
-      //   author: { value: '', defaultValue: '', isRequired: true },
-      //   name: { value: '', defaultValue: '', isRequired: true  },
-      //   year: { value: '', defaultValue: '' , validationRules: [/^1[5-9]\d\d|20[0-2]\d$/] },
-      //   image: { value: '', defaultValue: '' },
-      //   isNew: { value: true, defaultValue: true },
-      // },
-      // book: {
-      //   id: { defaultValue: '' },
-      //   isbn: { defaultValue: '' },
-      //   timeout: { defaultValue: '' },
-      //   isNew: { defaultValue: true },
-      // },
     },
-    // delete: {
-    //   entity: null,
-    //   id: null,
-    //   name: '',
-    // },
+    delete: {
+      entity: null,
+      id: null,
+      name: '',
+    },
+    users: {
+      'test@gmail.com': {
+        id: 'test@gmail.com',
+        name: 'Тарас Шевченко',
+        pass: 'e42776aa51230617b6ac2d4690d78771d26acd39',
+      },
+      'test2@gmail.com': {
+        id: 'test2@gmail.com',
+        name: 'Леся Українка',
+        pass: 'e42776aa51230617b6ac2d4690d78771d26acd39',
+      },
+    },
     data: {
     }
   },
   signals: {
     rootRouted: sequences.rootRouted,
     adminRouted: authenticate(sequences.adminRouted),
-    loginRouted: sequences.loginRouted,
+    secondRouted: authenticate(sequences.secondRouted),
 
-    applicationLoaded: sequences.applicationLoaded,
-    showModal: sequences.showModal,
-    updateField: sequences.updateField,
     submitLogin: sequences.submitLogin,
     openLogin: sequences.openLogin,
     closeLogin: sequences.closeLogin,
     logout: sequences.logout,
     autologin: sequences.autologin,
+
+    applicationLoaded: sequences.applicationLoaded,
+    showModal: sequences.showModal,
+    updateField: sequences.updateField,
     loadFile: sequences.loadFile,
     downloadFile: sequences.downloadFile,
     deleteEntity: sequences.deleteEntity,
@@ -89,6 +79,7 @@ export default Module({
   },
   providers: {
     longPromise,
+    hash: hashProvider,
     form: FormsProvider({
       // Add additional rules
       rules: {
@@ -115,6 +106,5 @@ export default Module({
   },
   modules: {
     router,
-    // publicModule,
   },
 });

@@ -16,8 +16,8 @@ export default Router({
       signal: 'adminRouted',
     },
     {
-      path: '/login',
-      signal: 'loginRouted',
+      path: '/second',
+      signal: 'secondRouted',
     },
   ],
 });

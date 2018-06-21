@@ -14,7 +14,7 @@ import { pageTransitionDelay } from './constants';
 /* Routes */
 export const rootRouted = factories.openRoute('root');
 export const adminRouted = factories.openRoute('admin');
-export const loginRouted = factories.openRoute('login');
+export const secondRouted = factories.openRoute('second');
 
 /* Marks application as loaded */
 export const applicationLoaded = [
@@ -23,7 +23,7 @@ export const applicationLoaded = [
   when(state`initialPage`),
   {
     true: set(state`currentPage`, state`initialPage`),
-    false: redirect('/'),
+    false: [],
   },
 ];
 
@@ -58,9 +58,17 @@ export const logout = [
 
 export const autologin = [
   actions.autologin,
-  when(props`notFound`, props`silent`, (notFound, silent) => notFound && !silent),
+  ({props}) => console.log('props', props),
+
+  when(props`notFound`),
   {
-    true: openLogin,
+    true: [
+      when(props`silent`),
+      {
+        true: redirect('/'),
+        false: openLogin,
+      },
+    ],
     false: [],
   },
 ];
@@ -76,10 +84,6 @@ export const selectLibrary = [
 ];
 export const selectBook = set(state`env.books.selected`, props`id`);
 export const selectPublished = set(state`env.published.selected`, props`id`);
-
-/* Work with books in libraries */
-export const putInLibrary = actions.putInLibrary;
-export const removeFromLibraries = actions.removeFromLibraries;
 
 /* Delete items */
 export const deleteEntity = [

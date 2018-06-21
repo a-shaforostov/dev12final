@@ -6,7 +6,7 @@
 import { Controller } from 'cerebral';
 import Devtools from 'cerebral/devtools';
 
-import app from './modules/index';
+import app from './app/index';
 
 const controller = Controller(app, {
   // devtools: null,

@@ -9,6 +9,7 @@ import jssCamelCase from 'jss-camel-case';
 import jssGlobal from 'jss-global';
 
 import Application from './Application';
+import 'semantic-ui-css/semantic.css';
 
 const jss = createJss();
 jss.use(jssNested(), jssCamelCase(), jssGlobal());

@@ -148,17 +148,6 @@ export const deleteEntityConfirm = ({ state, props }) => {
     // remove selection before deleting
     state.set(`env.${entity}.selected`, null);
 
-    // delete relations
-    // delete books from library
-    if (entity === 'libraries') {
-      const books = state.get(`data.books`);
-      state.set(`data.books`, books.filter(book => book.library !== id));
-    }
-    if (entity === 'published') {
-      const books = state.get(`data.books`);
-      state.set(`data.books`, books.filter(book => book.isbn !== id));
-    }
-
     // delete entity itself
     state.set(`data.${entity}`, items.filter(item => item.id !== id));
   }
@@ -199,32 +188,4 @@ export const postEntity = context => {
     const arr = state.get(`data.${entity}`);
     state.set(`data.${entity}`, arr.map(item => item.id === data.id ? data : item));
   }
-};
-
-/**
- * Remove book from library
- * @param state
- * @param props
- */
-export const removeFromLibraries = ({ state, props }) => {
-  const id = props.id;
-  const books = state.get('data.books');
-  state.set('data.books', books.filter(book => book.isbn !== id));
-};
-
-/**
- * Put book into library
- * @param state
- * @param props
- */
-export const putInLibrary = ({ state, props }) => {
-  const id = Date.now();
-  const isbn = props.id;
-  const library = state.get('env.libraries.selected');
-  state.push('data.books', {
-    id,
-    isbn,
-    library,
-    reserved: false,
-  });
 };
