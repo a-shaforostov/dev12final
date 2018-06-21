@@ -1,0 +1,29 @@
+{
+  "name": "client2",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@blueprintjs/core": "^2.3.1",
+    "@cerebral/forms": "^3.2.2",
+    "@cerebral/react": "^3.2.2",
+    "@cerebral/router": "^3.2.2",
+    "cerebral": "^4.2.2",
+    "classnames": "^2.2.6",
+    "jss": "^9.8.6",
+    "jss-camel-case": "^6.1.0",
+    "jss-global": "^3.0.0",
+    "jss-nested": "^6.0.1",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-jss": "^8.5.1",
+    "react-loadable": "^5.4.0",
+    "react-scripts": "1.1.4",
+    "react-transition-group": "^2.3.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
