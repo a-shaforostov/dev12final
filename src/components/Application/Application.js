@@ -10,8 +10,8 @@ import injectSheet from 'react-jss';
 import { pageTransitionDelay } from '../../app/constants';
 
 import MainPage from 'pages/MainPage';
-import SecondPage from 'pages/SecondPage';
-import LoginForm from '../LoginForm';
+import GamePage from 'pages/GamePage';
+import ResultsPage from 'pages/ResultsPage';
 
 const styles = {
   '@global body': {
@@ -54,12 +54,14 @@ class Application extends Component {
   }
 
   render() {
-    const { classes, visibleLogin } = this.props;
+    const { classes } = this.props;
+    // console.log(this.props.classes);
+    // debugger;
     return (
       <div className={classes.container}>
         <MainPage />
-        <SecondPage />
-        <LoginForm open={visibleLogin} />
+        <GamePage />
+        <ResultsPage />
       </div>
     )
   }
@@ -67,7 +69,6 @@ class Application extends Component {
 
 export default connect(
   {
-    visibleLogin: state`env.login.edit`,
     applicationLoaded: signal`applicationLoaded`,
   },
   injectSheet(styles)(Application),

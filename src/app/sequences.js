@@ -5,7 +5,7 @@
 
 import { set, when, wait } from "cerebral/operators";
 import { resetForm } from '@cerebral/forms/operators';
-import { redirect } from '@cerebral/router/operators';
+import { redirect, goTo } from '@cerebral/router/operators';
 import { props, state } from "cerebral/tags";
 import * as factories from "./factories";
 import * as actions from "./actions";
@@ -13,8 +13,8 @@ import { pageTransitionDelay } from './constants';
 
 /* Routes */
 export const rootRouted = factories.openRoute('root');
-export const adminRouted = factories.openRoute('admin');
-export const secondRouted = factories.openRoute('second');
+export const gameRouted = factories.openRoute('game');
+export const resultsRouted = factories.openRoute('results');
 
 /* Marks application as loaded */
 export const applicationLoaded = [
@@ -27,51 +27,18 @@ export const applicationLoaded = [
   },
 ];
 
+export const startGame = [
+  goTo('/game'),
+];
+
 /* Form processing */
 export const showModal = set(state`env.${props`name`}.edit`, props`show`);
 
 export const updateField = [
-  set(state`forms.${props`form`}.${props`name`}.value`, props`value`),
-  set(state`forms.${props`form`}.${props`name`}.isPristine`, false),
+  set(state`${props`path`}`, props`value`),
 ];
 
 export const resetEditForm = resetForm(state`${props`form`}`);
-
-/* Login signals */
-export const submitLogin = actions.submitLogin;
-
-export const openLogin = [
-  set(state`env.login.edit`, true),
-  resetForm(state`forms.login`),
-];
-
-export const closeLogin = [
-  set(state`env.login.edit`, false),
-  set(state`loginError`, false),
-  ({ longPromise }) => longPromise.rejectPromise(),
-];
-export const logout = [
-  set(state`user`, null),
-  actions.logout,
-  redirect('/'),
-];
-
-export const autologin = [
-  actions.autologin,
-  ({props}) => console.log('props', props),
-
-  when(props`notFound`),
-  {
-    true: [
-      when(props`silent`),
-      {
-        true: redirect('/'),
-        false: openLogin,
-      },
-    ],
-    false: [],
-  },
-];
 
 /* File signals */
 export const downloadFile = actions.downloadFile;

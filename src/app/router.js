@@ -12,12 +12,12 @@ export default Router({
       signal: 'rootRouted',
     },
     {
-      path: '/admin',
-      signal: 'adminRouted',
+      path: '/game',
+      signal: 'gameRouted',
     },
     {
-      path: '/second',
-      signal: 'secondRouted',
+      path: '/results',
+      signal: 'resultsRouted',
     },
   ],
 });

@@ -27,7 +27,6 @@ export const openRoute = route => {
             set(state`currentPage`, null),
             wait(pageTransitionDelay),
             set(state`currentPage`, route),
-            // redirect(`/${route}`),
           ],
           false: [],
         },
@@ -37,30 +36,4 @@ export const openRoute = route => {
       ],
     },
   ];
-};
-
-/**
- * Process authentication flow
- * @param continueSequence - sequence for continuing
- * @returns sequence
- */
-export const authenticate = (continueSequence = []) => {
-  return [
-    sequences.autologin,
-    when(state`user`, user => !!user),
-    {
-      true: [],
-      false: [
-        // Якщо користувач не аутентифікований - чекати на проміс з результатами аутентифікації
-        ({ longPromise }) => longPromise.createPromise(),
-      ],
-    },
-    when(state`user`, user => !!user),
-    {
-      true: [
-        continueSequence
-      ],
-      false: [redirect('/')],
-    },
-  ]
 };
