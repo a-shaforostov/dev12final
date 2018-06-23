@@ -1,14 +1,10 @@
-/**
- * Actions for admin part
- * @module ActionsAdmin
- */
-
 export function updateName({ state, props }) {
   const users = state.get(`data.users`);
   users[props.index].name = props.value;
   state.set(`data.users`, users);
 }
 
+// Новий хід
 export function newTurn(context) {
   const { state } = context;
 
@@ -25,6 +21,7 @@ export function newTurn(context) {
     teams[currentTeam].currentTurn++;
     state.set(`data.game.teams`, teams);
 
+    // Створити новий камінь
     const newBall = {
       team: currentTeam,
       x: 250,
@@ -42,6 +39,7 @@ export function newTurn(context) {
 
 }
 
+// Новий енд
 export function newEnd({ state }) {
   const currentEnd = state.get(`data.game.currentEnd`);
   state.set(`data.game.currentEnd`, currentEnd+1);
@@ -63,6 +61,7 @@ export function newEnd({ state }) {
 
 }
 
+// Нова гра
 export function newGame(context) {
   const { state, router } = context;
   state.set(`data.game.inGame`, true);
@@ -83,6 +82,7 @@ export function newGame(context) {
   router.goTo('/game');
 }
 
+// Завершити енд
 export function closeEnd(context) {
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -111,6 +111,7 @@ export function closeEnd(context) {
 
 }
 
+// Завершити гру
 export function closeGame(context) {
   const { state, router } = context;
 
@@ -131,6 +132,7 @@ export function closeGame(context) {
   router.goTo('/results');
 }
 
+// Почати з початку
 export function start({ router }) {
   router.goTo('/');
 }

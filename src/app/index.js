@@ -1,8 +1,3 @@
-/**
- * Module of admin part and general part
- * @module ModuleAdmin
- */
-
 import { Module } from "cerebral";
 import * as sequences from "./sequences";
 
@@ -18,6 +13,8 @@ export default Module({
       height: 440*9,
       koef: 440/500,
     },
+
+    // параметри грального майданчика
     field: { // сантиметри
       height: 4500,
       width: 500,
@@ -72,13 +69,13 @@ export default Module({
         teams: [
           {
             currentTurn: 1,
-            turns: [null, null, null, null, null, null, null, null],
-            ends: [3, 0, null, null, null, null, null, null, null, null],
+            turns: [],
+            ends: [],
           },
           {
             currentTurn: 1,
-            turns: [null, null, null, null, null, null, null, null],
-            ends: [0, 2, null, null, null, null, null, null, null, null],
+            turns: [],
+            ends: [],
           },
         ],
 
@@ -100,8 +97,6 @@ export default Module({
     start: sequences.start,
 
     resetEditForm: sequences.resetEditForm,
-  },
-  providers: {
   },
   modules: {
     router,

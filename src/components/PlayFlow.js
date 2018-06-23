@@ -11,7 +11,6 @@ const styles = {
   },
   table: {
     width: '100%',
-    // tableLayout: 'fixed',
   },
   turn: {
     padding: '1%',

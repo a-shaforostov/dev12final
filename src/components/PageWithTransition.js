@@ -15,7 +15,6 @@ const styles = {
 
 class PageWithTransition extends Component {
   render() {
-    // const { classes } = this.props;
     const { children, currentPage, page, ...props } = this.props;
     return (
       <CSSTransition

@@ -23,15 +23,11 @@ export const applicationLoaded = [
 
 /* Form processing */
 export const showModal = set(state`env.${props`name`}.edit`, props`show`);
-
-export const updateField = [
-  set(state`${props`path`}`, props`value`),
-];
-
+export const updateField = set(state`${props`path`}`, props`value`);
 export const updateName = actions.updateName;
-
 export const resetEditForm = resetForm(state`${props`form`}`);
 
+/* Game navigation */
 export const newGame = actions.newGame;
 export const newTurn = actions.newTurn;
 export const start = actions.start;
