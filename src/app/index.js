@@ -5,11 +5,8 @@
 
 import { Module } from "cerebral";
 import * as sequences from "./sequences";
-import { state } from 'cerebral/tags';
 
 import router from './router';
-
-const koef = 440/500;
 
 export default Module({
   state: {
@@ -39,12 +36,11 @@ export default Module({
       },
     },
 
-    teamMates: [
-      'скип',
-      'вице-скип',
-      'первый',
-      'второй',
-    ],
+    turnParams: {
+      angle: 0,
+      power: 100,
+      rotation: 0,
+    },
 
     data: {
       users: [
@@ -62,10 +58,17 @@ export default Module({
           name: 'Штучний інтелект',
         },
       ],
-      player2Index: 1,
+      player2Index: '1',
       game: {
-        currentTeam: 0,
+        inGame: false,
+        gameOver: false,
+        gameResult: [],
+        gameWinner: null,
+
         currentEnd: 1,
+
+        currentTurn: 1,
+        currentTeam: 0,
         teams: [
           {
             currentTurn: 1,
@@ -77,8 +80,11 @@ export default Module({
             turns: [null, null, null, null, null, null, null, null],
             ends: [0, 2, null, null, null, null, null, null, null, null],
           },
-        ]
-      }
+        ],
+
+        balls: [],
+        currentBall: null,
+      },
     }
   },
   signals: {
@@ -88,13 +94,12 @@ export default Module({
 
     applicationLoaded: sequences.applicationLoaded,
     updateField: sequences.updateField,
-    startGame: sequences.startGame,
+    updateName: sequences.updateName,
+    newGame: sequences.newGame,
+    newTurn: sequences.newTurn,
+    start: sequences.start,
 
-    loadFile: sequences.loadFile,
-    downloadFile: sequences.downloadFile,
-    editEntity: sequences.editEntity,
     resetEditForm: sequences.resetEditForm,
-    postEntity: sequences.postEntity,
   },
   providers: {
   },

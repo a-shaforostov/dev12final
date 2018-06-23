@@ -13,10 +13,10 @@ const styles = {
     width: '440px',
     margin: '0 auto',
     backgroundColor: 'lightgray',
+    padding: '10px',
   },
   table: {
     width: '100%',
-    // tableLayout: 'fixed',
   },
   turn: {
     padding: '1%',
@@ -25,72 +25,27 @@ const styles = {
   }
 };
 
-class PlayFlow extends Component {
+class Controls extends Component {
+  handleChange = path => e => {
+    this.props.updateField({ path, value: e.target.value });
+  };
+
+  handleThrowStone = e => {
+    e.preventDefault();
+    this.props.newTurn();
+  };
+
   render() {
-    const { classes, teamMates, users, player2Index, game } = this.props;
+    const { classes, turnParams } = this.props;
     return (
       <div className={classes.container}>
-        <table className={classes.table}>
-          <tbody>
-          {
-            [0,player2Index].map((player, plIndex) => {
-              const sum = game.teams[plIndex].ends.reduce((sum, item) => sum+item, 0);
-              return (
-                <tr>
-                  <td><div>{users[player].name}</div></td>
-                  {
-                    game.teams[plIndex].ends.map(end => {
-                      return (
-                        <td style={{width: '8%'}}>
-                          <div style={{backgroundColor: 'white', textAlign: 'center'}}>{end !== null ? end : '-'}</div>
-                        </td>
-                      )
-                    })
-                  }
-                  <td style={{width: '10%'}}>
-                    <div style={{backgroundColor: 'white', textAlign: 'center', fontWeight: '700'}}>{sum !== null ? sum : '-'}</div>
-                  </td>
-                </tr>
-              )
-            })
-          }
-          </tbody>
-        </table>
-        <table className={classes.table}>
-          <thead>
-            <tr>
-              <td colSpan="8" style={{width: '50%'}}>{users[0].name}</td>
-              <td colSpan="8">{users[player2Index].name}</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              {
-                [0,1].map(team => {
-                  return game.teams[team].turns.map((turn, index) => {
-                    var color = 'white';
-                    if (index + 1 === game.teams[team].currentTurn && game.currentTeam === team) {
-                      color = 'yellow';
-                    }
-                    if (index + 1 < game.teams[team].currentTurn) {
-                      color = 'green';
-                    }
-                    return (
-                      <td>
-                        <div
-                          className={classes.turn}
-                          style={{backgroundColor: color}}
-                        >
-
-                        </div>
-                      </td>
-                    )
-                  })
-                })
-              }
-            </tr>
-          </tbody>
-        </table>
+        <form onSubmit={this.handleThrowStone}>
+          <span>Кут:</span>&nbsp;
+          <input type="number" min="-5" max="5" step="0.01" name="angle" value={turnParams.angle} onChange={this.handleChange('turnParams.angle')}/>&nbsp;
+          <span>Сила:</span>&nbsp;
+          <input type="number" min="10" max="100" name="power" value={turnParams.power} onChange={this.handleChange('turnParams.power')}/>&nbsp;
+          <button type="submit">Кинути</button>
+        </form>
       </div>
     )
   }
@@ -98,9 +53,9 @@ class PlayFlow extends Component {
 
 export default connect(
   {
-    users: state`data.users`,
-    player2Index: state`data.player2Index`,
-    game: state`data.game`,
+    turnParams: state`turnParams`,
+    updateField: signal`updateField`,
+    newTurn: signal`newTurn`,
   },
-  injectSheet(styles)(PlayFlow),
+  injectSheet(styles)(Controls),
 );

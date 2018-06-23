@@ -4,10 +4,8 @@
  */
 
 import { set, when, wait } from "cerebral/operators";
-import { redirect } from '@cerebral/router/operators'
 import { state } from 'cerebral/tags';
 import { pageTransitionDelay } from './constants';
-import * as sequences from "./sequences";
 
 /**
  * Process transition between routes

@@ -1,15 +1,11 @@
-/**
- * Component. Admin page
- * @file
- */
-
 import React, { Component } from "react";
 import { connect } from "@cerebral/react";
-import { state, signal } from 'cerebral/tags';
+import { state } from 'cerebral/tags';
 import injectSheet from 'react-jss';
 
 import PageWithTransition from 'components/PageWithTransition';
 import PlayFlow from 'components/PlayFlow';
+import Controls from 'components/Controls';
 
 const styles = {
   page: {
@@ -25,7 +21,7 @@ const styles = {
     minWidth: '440px',
     maxWidth: '960px',
     margin: '0 auto',
-    height: 'calc(100% - 92px)',
+    height: 'calc(100% - 92px - 42px)',
     backgroundColor: 'white',
     overflowY: 'auto',
   },
@@ -35,9 +31,9 @@ const styles = {
   },
 };
 
-class AdminPage extends Component {
+class GamePage extends Component {
   render() {
-    const { classes, window, field, teamMates } = this.props;
+    const { classes, window, field } = this.props;
 
     return (
       <PageWithTransition page="game" className={classes.wrapper}>
@@ -82,6 +78,7 @@ class AdminPage extends Component {
             </div>
           </div>
         </div>
+        <Controls />
       </PageWithTransition>
     )
   }
@@ -95,5 +92,5 @@ export default connect(
     window: state`window`,
     field: state`field`,
   },
-  injectSheet(styles)(AdminPage),
+  injectSheet(styles)(GamePage),
 );

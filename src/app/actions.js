@@ -3,189 +3,134 @@
  * @module ActionsAdmin
  */
 
-/**
- * Automatic login using Credentials API
- * @param state
- * @param path
- * @param props
- * @returns {*|Promise<T>}
- */
-export const autologin = ({ state, path, props }) => {
-  if (window.PasswordCredential) {
-    const user = state.get('user');
-    if (!user) {
-      return navigator.credentials.get({
-        password: true,
-      }).then(c => {
-        if (c) {
-          const users = state.get(`users`);
-          return users[c.id];
-        } else {
-          return Promise.resolve();
-        }
-      }).then(profile => {
-        if (profile) {
-          state.set('user', profile);
-          return { user: profile };
-        } else {
-          return { notFound: true };
-        }
-      }).catch(error => {
-        return { error };
-      });
-    }
-  }
-};
-
-/**
- * Submit data from login form
- * @param state
- * @param hash - hash provider
- * @param form
- * @param path
- * @param longPromise
- */
-export const submitLogin = ({ state, hash, form, path, longPromise }) => {
-  const loginForm = form.get(`forms.login`);
-  const { name, pass } = loginForm;
-  const users = state.get(`users`);
-  const storedUser = users[name.value];
-  const approved = storedUser && hash.sha1(pass.value) === storedUser.pass;
-  if (approved) {
-    state.set('user', storedUser);
-    state.set(`env.login.edit`, false);
-    state.set(`loginError`, false);
-    longPromise.resolvePromise();
-    if (window.PasswordCredential) {
-      const { id, pass: password } = storedUser;
-      const c = new PasswordCredential({ id, name: storedUser.name, password, iconURL: storedUser.avatar });
-      navigator.credentials.store(c)
-        .catch(e => console.error(e));
-    }
-
-    path && path.success();
-  } else {
-    state.set('user', null);
-    state.set(`loginError`, true);
-    path && path.denied();
-  }
-};
-
-/**
- * Logout
- */
-export const logout = () => {
-  if (window.PasswordCredential) {
-    navigator.credentials.preventSilentAccess();
-  }
-};
-
-/**
- * Download file
- * @param props
- */
-export function downloadFile({ props }) {
-  const { data, filename } = props;
-  const link = document.createElement("a");
-  link.download = filename;
-  link.href = data;
-  document.body.appendChild(link);
-  link.click();
-  setTimeout(() => document.body.removeChild(link), 0);
+export function updateName({ state, props }) {
+  const users = state.get(`data.users`);
+  users[props.index].name = props.value;
+  state.set(`data.users`, users);
 }
 
-/**
- * Load data file
- * @param state
- * @param props
- * @returns {Promise<void>}
- */
-export async function loadFile({ state, props }) {
+export function newTurn(context) {
+  const { state } = context;
 
-  function readFile(file){
-    return new Promise((resolve, reject) => {
-      const fr = new FileReader();
-      fr.onload = () => {
-        resolve(fr.result)
-      };
-      fr.readAsText(file);
-    });
+  let currentTurn = state.get(`data.game.currentTurn`);
+  let currentTeam = state.get(`data.game.currentTeam`);
+
+  if (currentTurn === 16) {
+
+    closeEnd(context);
+
+  } else {
+
+    const teams = state.get(`data.game.teams`);
+    teams[currentTeam].currentTurn++;
+    state.set(`data.game.teams`, teams);
+
+    const newBall = {
+      team: currentTeam,
+      x: 250,
+      y: 512 + 640,
+      angle: 0,
+      speed: 0,
+    };
+    state.push('data.game.balls', newBall);
+    state.set(`data.game.currentBall`, newBall);
+
+    currentTeam = currentTeam === 0 ? 1 : 0;
+    state.set(`data.game.currentTeam`, currentTeam);
+    state.set(`data.game.currentTurn`, currentTurn + 1);
   }
 
-  const { filename } = props;
-
-  let data;
-  try {
-    data = await readFile(filename);
-  } catch(e) {
-    alert('Can`t read file');
-    return;
-  }
-
-  let dataObj;
-  try {
-    dataObj = JSON.parse(data);
-  } catch(e) {
-    alert('wrong file format');
-    return;
-  }
-
-  state.set('data', dataObj);
 }
 
-/**
- * Confirm delete item in confirmation modal
- * @param state
- * @param props
- */
-export const deleteEntityConfirm = ({ state, props }) => {
-  const { confirm } = props;
-  if (confirm) {
-    const entity = state.get(`delete.entity`);
-    const id = state.get(`delete.id`);
-    const items = state.get(`data.${entity}`);
+export function newEnd({ state }) {
+  const currentEnd = state.get(`data.game.currentEnd`);
+  state.set(`data.game.currentEnd`, currentEnd+1);
 
-    // remove selection before deleting
-    state.set(`env.${entity}.selected`, null);
+  state.set(`data.game.currentTurn`, 1);
 
-    // delete entity itself
-    state.set(`data.${entity}`, items.filter(item => item.id !== id));
+  //TODO: Команда залежить від попереднього результату
+  state.set(`data.game.currentTeam`, 0);
+
+  const teams = state.get(`data.game.teams`);
+  [0,1].forEach(team => {
+    teams[team].currentTurn = 1;
+    teams[team].turns = Array(8).fill(null);
+  });
+  state.set(`data.game.teams`, teams);
+
+  state.set(`data.game.balls`, []);
+  state.set(`data.game.currentBall`, null);
+
+}
+
+export function newGame(context) {
+  const { state, router } = context;
+  state.set(`data.game.inGame`, true);
+  state.set(`data.game.gameOver`, false);
+  state.set(`data.game.gameResult`, []);
+  state.set(`data.game.gameWinner`, null);
+  state.set(`data.game.currentEnd`, 0);
+
+  newEnd(context);
+
+  // Очистити результати ендів
+  const teams = state.get(`data.game.teams`);
+  [0,1].forEach(team => {
+    teams[team].ends = Array(10).fill(null);
+  });
+  state.set(`data.game.teams`, teams);
+
+  router.goTo('/game');
+}
+
+export function closeEnd(context) {
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  state.set(`delete.entity`, null);
-  state.set(`delete.id`, null);
-  state.set(`delete.name`, null);
-};
+  const { state } = context;
 
-/**
- * Add new or update existing item
- * @param context
- */
-export const postEntity = context => {
-  const { state, form, props } = context;
+  // TODO: Вираховувати результати енда
+  const num = getRandomInt(0, 4);
+  const winner = getRandomInt(0, 1);
+  const looser = winner === 0 ? 1 : 0;
 
-  // Prepare data
-  const formData = form.toJSON(`forms.${props.entity}`);
+  const end = state.get(`data.game.currentEnd`);
 
-  const { isNew, ...data } = formData;
-  if (isNew) {
-    // Create entity
-    data.id = data.id || String(Date.now());
-    push(props.entity, data);
+  // Встановити результати енда
+  const teams = state.get(`data.game.teams`);
+  teams[winner].ends[end-1] = num;
+  teams[looser].ends[end-1] = 0;
+  state.set(`data.game.teams`, teams);
+
+  if (end === 10) {
+    closeGame(context);
   } else {
-    // Update entity
-    update(props.entity, data);
+    newEnd(context);
   }
 
-  // Hide form
-  state.set(`env.${props.entity}.edit`, null);
+}
 
-  function push(entity, data) {
-    state.push(`data.${entity}`, data);
-  }
+export function closeGame(context) {
+  const { state, router } = context;
 
-  function update(entity, data) {
-    const arr = state.get(`data.${entity}`);
-    state.set(`data.${entity}`, arr.map(item => item.id === data.id ? data : item));
+  state.set(`data.game.inGame`, false);
+  state.set(`data.game.gameOver`, true);
+
+  const teams = state.get(`data.game.teams`);
+  const result = [0,1].map(team => teams[team].ends.reduce((sum, item) => sum+item, 0));
+  state.set(`data.game.gameResult`, result);
+  let winner = null;
+  if (result[0] > result[1]) {
+    winner = 0;
+  } else if (result[0] < result[1]) {
+    winner = 1;
   }
-};
+  state.set(`data.game.gameWinner`, winner);
+
+  router.goTo('/results');
+}
+
+export function start({ router }) {
+  router.goTo('/');
+}

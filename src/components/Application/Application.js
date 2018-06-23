@@ -5,7 +5,7 @@
 
 import React, { Component } from 'react';
 import { connect } from "@cerebral/react";
-import { state, signal } from 'cerebral/tags';
+import {  signal } from 'cerebral/tags';
 import injectSheet from 'react-jss';
 import { pageTransitionDelay } from '../../app/constants';
 

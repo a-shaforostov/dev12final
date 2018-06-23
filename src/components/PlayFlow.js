@@ -1,11 +1,6 @@
-/**
- * Component. Application
- * @file
- */
-
 import React, { Component } from 'react';
 import { connect } from "@cerebral/react";
-import { state, signal } from 'cerebral/tags';
+import { state } from 'cerebral/tags';
 import injectSheet from 'react-jss';
 
 const styles = {
@@ -27,7 +22,7 @@ const styles = {
 
 class PlayFlow extends Component {
   render() {
-    const { classes, teamMates, users, player2Index, game } = this.props;
+    const { classes, users, player2Index, game } = this.props;
     return (
       <div className={classes.container}>
         <table className={classes.table}>
@@ -36,12 +31,12 @@ class PlayFlow extends Component {
             [0,player2Index].map((player, plIndex) => {
               const sum = game.teams[plIndex].ends.reduce((sum, item) => sum+item, 0);
               return (
-                <tr>
+                <tr key={plIndex}>
                   <td><div>{users[player].name}</div></td>
                   {
-                    game.teams[plIndex].ends.map(end => {
+                    game.teams[plIndex].ends.map((end, index) => {
                       return (
-                        <td style={{width: '8%'}}>
+                        <td style={{width: '8%'}} key={index}>
                           <div style={{backgroundColor: 'white', textAlign: 'center'}}>{end !== null ? end : '-'}</div>
                         </td>
                       )
@@ -76,7 +71,7 @@ class PlayFlow extends Component {
                       color = 'green';
                     }
                     return (
-                      <td>
+                      <td key={index}>
                         <div
                           className={classes.turn}
                           style={{backgroundColor: color}}
