@@ -55,8 +55,6 @@ class Application extends Component {
 
   render() {
     const { classes } = this.props;
-    // console.log(this.props.classes);
-    // debugger;
     return (
       <div className={classes.container}>
         <MainPage />

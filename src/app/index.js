@@ -52,7 +52,7 @@ export default Module({
         },
         {
           type: 'Комп\'ютер',
-          name: 'Штучний інтелект',
+          name: 'Комп\'ютер',
         },
       ],
       player2Index: '1',
